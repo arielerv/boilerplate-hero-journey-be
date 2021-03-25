@@ -1,0 +1,11 @@
+**/.*/
+node_modules/
+dist/
+coverage
+*.log
+.history
+.vscode
+.env*
+.env
+.env-prod
+.env-uat
