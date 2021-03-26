@@ -1,6 +1,6 @@
 const {Router} = require('express');
 const get = require('lodash/get');
-const { authenticate, errorHandler} = require('./middlewares');
+const { /*authenticate,*/ errorHandler} = require('./middlewares');
 const {StatusController} = require('../controllers');
 const Logger = require('../helpers/logger');
 
@@ -28,8 +28,7 @@ const localRoute = route => {
 class Routes {
     static configure(app) {
         app.use('/', localRoute(Router()));
-        app.use('/api', authenticate, require('./api')(Router()));
-        Logger.info('Loading public api...');
+        app.use('/api', /* authenticate,*/ require('./api')(Router()));
         app.use('/publicApi', require('./publicApi')(Router()));
         app.use(errorHandler);
     }

@@ -6,6 +6,5 @@ coverage
 .history
 .vscode
 .env*
-.env
 .env-prod
 .env-uat

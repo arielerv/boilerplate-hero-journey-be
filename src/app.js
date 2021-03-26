@@ -8,6 +8,7 @@ const logger = require('./helpers/logger');
 const Router = require('./routes');
 const packageJson = require('../package.json');
 const {OpenApiValidator} = require('express-openapi-validator');
+const Mongoose = require('./helpers/mongoose');
 const {BODY_LIMIT, NODE_ENV, PORT} = process.env;
 
 class App {
@@ -41,6 +42,7 @@ class App {
     }
 
     _configure() {
+        Mongoose.configure();
         this._middlewares();
         return this._routes();
     }

@@ -1,4 +1,4 @@
-const {ArqService} = require('../../services');
+const {AuthService} = require('../../services');
 
 module.exports = async (req, res, next) => {
     const header = req.get('Authorization');
@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
         return res.sendStatus(401);
     }
     try {
-        const {success, user, message, tokenExpired} = await ArqService.validateToken(header);
+        const {success, user, message, tokenExpired} = await AuthService.validateSession(header);
         if (!success || user.deleted) {
             return res.sendStatus(401);
         }

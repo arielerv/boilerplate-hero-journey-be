@@ -1,7 +1,15 @@
-const { UserController } = require('../../controllers');
+const {Router} = require('express');
+const requireDir = require('require-dir');
+const forEach = require('lodash/forEach');
+const logger = require('../../helpers/logger');
 
-module.exports = router => {
-    router.post('/session', UserController.validateSession);
-
+module.exports = function(router) {
+    forEach(
+        requireDir('.', {recurse: true}),
+        (module, name) => {
+            logger.info(`Loading ${name} public api...`);
+            router.use(`/${name}`, module(Router()));
+        }
+    );
     return router;
 };
