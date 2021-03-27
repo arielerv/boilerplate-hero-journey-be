@@ -32,6 +32,7 @@
     "mongoose": "^5.12.2",
     "morgan": "^1.9.1",
     "node": "^15.4.0",
+    "node-ews": "^3.4.2",
     "node-fetch": "^2.6.1",
     "querystring": "^0.2.1",
     "require-dir": "^1.2.0",

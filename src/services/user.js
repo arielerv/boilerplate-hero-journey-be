@@ -1,5 +1,7 @@
 const fetch = require('node-fetch');
 const {stringify} = require('querystring');
+const {User} = require('../models');
+const {ObjectId} = require('mongoose').Types;
 
 const {AUTH_ENDPOINT, AUTH_CLIENT_ID, AUTH} = process.env;
 const OAUTH_API = `${AUTH_ENDPOINT}oauth/`;
@@ -50,6 +52,19 @@ class UserService {
         } catch (err) {
             throw Error(err);
         }
+    }
+
+    static updateById(userId, user) {
+        return User.updateOne({_id: ObjectId(userId)}, user).exec();
+    }
+
+    static find(filters) {
+        return User.findOne(filters, {password: 0}).lean().exec();
+    }
+
+    static async create(user) {
+        const userSaved = await new User(user).save();
+        return this.find({ _id: userSaved._id});
     }
 }
 
