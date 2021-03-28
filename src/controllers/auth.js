@@ -54,16 +54,23 @@ class AuthController {
                 user: req.body.email,
                 timestamp: Date.now()
             }));
+            const user = await UserService.find({email: req.body.email});
+            if (user) {
+                return res.status(400).send({ emailExists: true, message: messageErrors.EMAIL_ALREADY_EXIST});
+            }
             const userSaved = await UserService.create({
                 ...req.body,
                 password: CryptoService.hash(req.body.password),
                 confirmed: false
             });
-            await EmailService.sendMail(
+            const response = await EmailService.sendMail(
                 req.body.email,
                 'User register for Hero\'s Journey',
                 `<p>Hi! ${userSaved.name},</p><p>We welcome you to the app <strong>Hero's Journey</strong>.</p></br><p><a href="http://localhost:5050/register/validate?token=${token}" target="_blank" rel="noopener noreferrer">Click here</a> to finish the registration.</p></br>`
             );
+            if (response.error) {
+                return res.status(500).send({success: false, message: messageErrors.ERROR_SEND_EMAIL});
+            }
             res.send({success: true});
         } catch (err) {
             next(err);
@@ -101,7 +108,7 @@ class AuthController {
             }
             const user = await UserService.find({email: req.body.email});
             if (user) {
-                return res.send({ emailExists: true, message: messageErrors.EMAIL_ALREADY_EXIST});
+                return res.status(400).send({ emailExists: true, message: messageErrors.EMAIL_ALREADY_EXIST});
             }
             res.send({ emailExists: false});
         } catch (err) {

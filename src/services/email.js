@@ -1,67 +1,29 @@
-const {EMAIL_HOST, EMAIL_USER, EMAIL_PASSWORD, DOMAIN} = process.env;
-const EWS = require('node-ews');
+const { EMAIL_USER, EMAIL_PASSWORD, DOMAIN, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_REFRESH_TOKEN } = process.env;
 const querystring = require('querystring');
 const CryptoService = require('./crypto');
 const TOKEN_TYPE = 'passRecover';
+const nodemailer = require('nodemailer');
 
 class EmailService {
-    static async sendMail(to, subject, message) {
-        const ews = new EWS({
-            host: EMAIL_HOST,
-            username: EMAIL_USER,
-            password: EMAIL_PASSWORD
-        });
-        await ews.run('CreateItem', {
-            attributes: {MessageDisposition: 'SendOnly'},
-            Items: {
-                Message: {
-                    ItemClass: 'IPM.Note',
-                    Subject: subject,
-                    Body: {
-                        attributes: {BodyType: 'HTML'},
-                        $value: `${message}<br/><br/><small>Please do not reply to this automated message.</small>`
-                    },
-                    ToRecipients: {Mailbox: {EmailAddress: to}},
-                    IsRead: 'false'
-                }
+    static sendMail(to, subject, message) {
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: EMAIL_USER,
+                pass: EMAIL_PASSWORD,
+                clientId: OAUTH_CLIENT_ID,
+                clientSecret: OAUTH_CLIENT_SECRET,
+                refreshToken: OAUTH_REFRESH_TOKEN
             }
-        }).catch(err => {
-            console.error(err.stack);
         });
-    }
-
-    static async sendCredentials(user, password) {
-        await EmailService.sendMail(
-            user.email,
-            'Blanqueo de contraseña',
-            `<p>Hola ${user.name},</p><p>A continuación se le adjunta su usuario para ingresar al sistema. Lo puede utilizar, tanto en el sistema de gestión como también en la aplicación.</p></br><p>Usuario <strong>${user.username}</strong><br/>Contraseña <strong>${password}</strong></p>`
-        );
-    }
-
-    static async sendTokenToPasswordRecovery(user) {
-        const token = CryptoService.encrypt(JSON.stringify({
-            type: TOKEN_TYPE,
-            user: user._id,
-            timestamp: Date.now()
-        }));
-        await EmailService.sendMail(
-            user.email,
-            'Recuperación de contraseña',
-            `Hola ${user.name},<br/><br/>Para ingresar al sistema, debe crear una nueva contraseña haciendo click en este <a href="${DOMAIN}/signIn.html#/resetPassword?t=${querystring.escape(token)}">link</a>.`
-        );
-    }
-
-    static async sendTokenToNewPassword(user) {
-        const token = CryptoService.encrypt(JSON.stringify({
-            type: TOKEN_TYPE,
-            user: user._id,
-            timestamp: Date.now()
-        }));
-        await EmailService.sendMail(
-            user.email,
-            'Generación de clave',
-            `Hola ${user.name},<br/><br/>Para ingresar al sistema, debe generar una contraseña haciendo click en este <a href="${DOMAIN}/signIn.html#/resetPassword?t=${querystring.escape(token)}">link</a>.`
-        );
+        const mailOptions = {
+            from: EMAIL_USER,
+            to: to,
+            subject: subject,
+            text: `${message}<br/><br/><small>Please do not reply to this automated message.</small>`
+        };
+        return transporter.sendMail(mailOptions);
     }
 }
 
