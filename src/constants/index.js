@@ -1,4 +1,6 @@
 const messageErrors = require('./messageErrors');
 const TOKEN_TYPE_REGISTER = 'register';
+const TOKEN_TYPE_RECOVERY = 'recovery';
+const TOKEN_TTL = 30 * 60 * 1000;
 
-module.exports = {TOKEN_TYPE_REGISTER, messageErrors};
+module.exports = {TOKEN_TYPE_REGISTER, TOKEN_TYPE_RECOVERY, TOKEN_TTL, messageErrors};

@@ -17,12 +17,6 @@ class TokenService {
         }
         return {user: await User.findOne({email: data.user}, {password: 0}).lean().exec()};
     }
-
-    static async reset(token, password, tokenType) {
-        const user = await TokenService.validateToken(token, tokenType);
-        user.password = CryptoService.hash(password);
-        return user.save();
-    }
 }
 
 module.exports = TokenService;
