@@ -2,7 +2,7 @@ const omit = require('lodash/omit');
 const {AuthService, UserService, EmailService, TokenService} = require('../services');
 const {CryptoService} = require('../services');
 const {validate, validateJWT, createJWT} = require('../utils');
-const {TOKEN_TYPE_REGISTER, messageErrors} = require('../constants');
+const {TOKEN_TYPE_REGISTER, TOKEN_TYPE_RECOVERY, messageErrors} = require('../constants');
 
 class AuthController {
     static async login(req, res, next) {
@@ -115,6 +115,59 @@ class AuthController {
             next(err);
         }
     }
+
+    static async recoveryPassword(req, res, next) {
+        try {
+            const missingFields = validate(req.body, ['email']);
+            if(missingFields.length) {
+                return res.status(400).send({success: false, missingFields, message: messageErrors.CHECK_DATA});
+            }
+            const user = await UserService.find({email: req.body.email});
+            if (!user) {
+                return res.status(400).send({ success: false, message: messageErrors.CHECK_DATA});
+            }
+            const token = CryptoService.encrypt(JSON.stringify({
+                type: TOKEN_TYPE_RECOVERY,
+                user: req.body.email,
+                timestamp: Date.now()
+            }));
+            const response = await EmailService.sendMail(
+                user.email,
+                'User recovery password for Hero\'s Journey',
+                `<p>Hi! ${user.name},</p><p>To enter the app, you must create a new password by clicking on this <strong>Hero's Journey</strong>.</p></br><p><a href="http://localhost:5050/resetPassword?token=${token}&email=${user.email}" target="_blank" rel="noopener noreferrer">Link</a>.</p></br>`
+            );
+            if (response.error) {
+                return res.status(500).send({success: false, message: messageErrors.ERROR_SEND_EMAIL});
+            }
+            res.send({success: true});
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    static async resetPassword(req, res, next) {
+        try {
+            const missingFields = validate(req.body, ['email', 'token', 'password']);
+            if(missingFields.length) {
+                return res.status(400).send({success: false, missingFields, message: messageErrors.CHECK_DATA});
+            }
+            const {user, error} = await TokenService.validateToken(req.body.token, TOKEN_TYPE_RECOVERY);
+            if(error) {
+                return res.status(400).send({ success: false, error});
+            }
+            if(!user) {
+                return res.status(400).send({ success: false, message: messageErrors.CHECK_DATA});
+            }
+            await UserService.updateById(user._id, {
+                ...user,
+                password: CryptoService.hash(req.body.password)
+            });
+            res.send({success: true});
+        } catch (err) {
+            next(err);
+        }
+    }
+
 }
 
 module.exports = AuthController;

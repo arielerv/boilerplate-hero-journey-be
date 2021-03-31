@@ -1,7 +1,4 @@
-const { EMAIL_USER, EMAIL_PASSWORD, DOMAIN, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_REFRESH_TOKEN } = process.env;
-const querystring = require('querystring');
-const CryptoService = require('./crypto');
-const TOKEN_TYPE = 'passRecover';
+const { EMAIL_USER, EMAIL_PASSWORD, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_REFRESH_TOKEN } = process.env;
 const nodemailer = require('nodemailer');
 
 class EmailService {
@@ -21,7 +18,7 @@ class EmailService {
             from: EMAIL_USER,
             to: to,
             subject: subject,
-            text: `${message}<br/><br/><small>Please do not reply to this automated message.</small>`
+            html: `${message}<br/><br/><small>Please do not reply to this automated message.</small>`
         };
         return transporter.sendMail(mailOptions);
     }

@@ -6,6 +6,8 @@ module.exports = router => {
     router.post('/register', AuthController.register);
     router.post('/confirmEmail', AuthController.confirmEmail);
     router.post('/verifyEmail', AuthController.verifyEmail);
+    router.post('/recoveryPassword', AuthController.recoveryPassword);
+    router.post('/resetPassword', AuthController.resetPassword);
 
     return router;
 };
