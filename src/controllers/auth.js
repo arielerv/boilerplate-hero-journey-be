@@ -2,7 +2,8 @@ const omit = require('lodash/omit');
 const {AuthService, UserService, EmailService, TokenService} = require('../services');
 const {CryptoService} = require('../services');
 const {validate, validateJWT, createJWT} = require('../utils');
-const {TOKEN_TYPE_REGISTER, TOKEN_TYPE_RECOVERY, messageErrors} = require('../constants');
+const {TOKEN_TYPE_REGISTER, TOKEN_TYPE_RECOVERY, messageErrors, EMAIL} = require('../constants');
+const {TYPE_CONFIRM} = process.env;
 
 class AuthController {
     static async login(req, res, next) {
@@ -61,8 +62,11 @@ class AuthController {
             const userSaved = await UserService.create({
                 ...req.body,
                 password: CryptoService.hash(req.body.password),
-                confirmed: false
+                confirmed: TYPE_CONFIRM !== EMAIL
             });
+            if(TYPE_CONFIRM !== EMAIL) {
+                return res.send({success: true});
+            }
             const response = await EmailService.sendMail(
                 req.body.email,
                 'User register for Hero\'s Journey',
