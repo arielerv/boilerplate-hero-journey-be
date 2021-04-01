@@ -1,4 +1,6 @@
 # Hero's Journey Back-End
+![alt text](https://github.com/arielerv/hero-journey/raw/master/public/logo.ico "Logo")
+
 The project is a boilerplate for node JS and use mongo with the driver mongoose for the database.<br/>
 
 ## Environment Variables
