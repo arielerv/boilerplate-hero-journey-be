@@ -43,13 +43,7 @@ class EmailService {
             html: `${message}<br/><br/><small>Please do not reply to this automated message.</small>`
         };
 
-        return transporter.sendMail(mailOptions, error =>{
-            if (error){
-                return {success: false, error: error.message};
-            } else {
-                return {success: true};
-            }
-        });
+        return transporter.sendMail(mailOptions);
     }
 }
 
