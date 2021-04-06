@@ -7,7 +7,7 @@ const nativeEvent = require('./helpers/nativeEvent');
 
 const app = new App();
 
-if (process.env.NODE_ENV === 'prod') {
+if (process.env.NODE_ENV === 'production') {
     if (cluster.isMaster) {
         nativeEvent.process();
         const CPUS = os.cpus();
