@@ -19,7 +19,7 @@ const clean = () => require('del')('dist');
 
 const copy = () => src(['./src/**', './public/**', 'index.js'], {base: '.'}).pipe(dest('dist'));
 
-const copyEnv = env => () => src([env ? `.env-${env}` : '.env'], {base: '.'})
+const copyEnv = () => () => src(['.env'], {base: '.', allowEmpty: true})
     .pipe(rename('.env'))
     .pipe(dest('dist/'));
 
