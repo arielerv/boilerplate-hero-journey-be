@@ -16,7 +16,3 @@ global.root_path = function(path) {
 global.include = function(file) {
     return require(abs_path('/' + file));
 };
-
-const Logger = include('helpers/logger');
-
-Logger.info('Global vars loaded');

@@ -2,7 +2,6 @@ const express = require('express')();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const helmet = require('helmet');
 const swaggerUi = require('swagger-ui-express');
 const logger = require('./helpers/logger');
 const Router = require('./routes');
@@ -10,7 +9,6 @@ const packageJson = require('../package.json');
 const {OpenApiValidator} = require('express-openapi-validator');
 const Mongoose = require('./helpers/mongoose');
 const {BODY_LIMIT, NODE_ENV, PORT} = process.env;
-const sixtyDaysInSeconds = 15768000;
 
 class App {
     constructor() {
@@ -65,13 +63,6 @@ class App {
             }));
         } else if(NODE_ENV !== 'test') {
             express.disable('x-powered-by');
-            express.use(
-                helmet({
-                    referrerPolicy: { policy: 'no-referrer' },
-                    contentSecurityPolicy: false,
-                    hsts: {maxAge: sixtyDaysInSeconds}
-                })
-            );
             express.use(cors());
         }
     }
