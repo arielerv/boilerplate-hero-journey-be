@@ -4,7 +4,7 @@ const {AuthService, UserService, EmailService, TokenService} = require('../servi
 const {CryptoService} = require('../services');
 const {validate, validateJWT, createJWT} = require('../utils');
 const {TOKEN_TYPE_REGISTER, TOKEN_TYPE_RECOVERY, messageErrors, EMAIL} = require('../constants');
-const {TYPE_CONFIRM} = process.env;
+const {TYPE_CONFIRM, URL_CLIENT} = process.env;
 
 class AuthController {
     static async login(req, res, next) {
@@ -71,7 +71,7 @@ class AuthController {
             const response = await EmailService.sendMail(
                 req.body.email,
                 'User register for Hero\'s Journey',
-                `<p>Hi! ${userSaved.name},</p><p>We welcome you to the app <strong>Hero's Journey</strong>.</p></br><p><a href="http://localhost:5050/register/validate?token=${token}" target="_blank" rel="noopener noreferrer">Click here</a> to finish the registration.</p></br>`
+                `<p>Hi! ${userSaved.name},</p><p>We welcome you to the app <strong>Hero's Journey</strong>.</p></br><p><a href="${URL_CLIENT}/register/validate?token=${token}" target="_blank" rel="noopener noreferrer">Click here</a> to finish the registration.</p></br>`
             );
             if (response.error) {
                 return res.status(500).send({success: false, message: messageErrors.ERROR_SEND_EMAIL});
@@ -139,7 +139,7 @@ class AuthController {
             const response = await EmailService.sendMail(
                 user.email,
                 'User recovery password for Hero\'s Journey',
-                `<p>Hi! ${user.name},</p><p>To enter the app, you must create a new password by clicking on this <strong>Hero's Journey</strong>.</p></br><p><a href="http://localhost:5050/resetPassword?token=${token}&email=${user.email}" target="_blank" rel="noopener noreferrer">Link</a>.</p></br>`
+                `<p>Hi! ${user.name},</p><p>To enter the app, you must create a new password by clicking on this <strong>Hero's Journey</strong>.</p></br><p><a href="${URL_CLIENT}/resetPassword?token=${token}&email=${user.email}" target="_blank" rel="noopener noreferrer">Link</a>.</p></br>`
             );
             if (response.error) {
                 return res.status(500).send({success: false, message: messageErrors.ERROR_SEND_EMAIL});
