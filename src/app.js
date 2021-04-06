@@ -64,7 +64,8 @@ class App {
                 credentials: true,
                 origin: /^http:\/\/localhost/
             }));
-        } else if(NODE_ENV !== 'test') {
+        }
+        if(NODE_ENV !== 'test') {
             express.disable('x-powered-by');
             express.use(
                 helmet({
