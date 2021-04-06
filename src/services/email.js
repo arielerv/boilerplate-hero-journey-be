@@ -1,4 +1,3 @@
-require('dotenv').config();
 const { EMAIL_USER, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_REFRESH_TOKEN } = process.env;
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
