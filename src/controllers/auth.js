@@ -67,13 +67,11 @@ class AuthController {
             if(TYPE_CONFIRM !== EMAIL) {
                 return res.send({success: true});
             }
-            console.log('paso1');
             const response = await EmailService.sendMail(
                 req.body.email,
                 'User register for Hero\'s Journey',
                 `<p>Hi! ${userSaved.name},</p><p>We welcome you to the app <strong>Hero's Journey</strong>.</p></br><p><a href="http://localhost:5050/register/validate?token=${token}" target="_blank" rel="noopener noreferrer">Click here</a> to finish the registration.</p></br>`
             );
-            console.log({response});
             if (response.error) {
                 return res.status(500).send({success: false, message: messageErrors.ERROR_SEND_EMAIL});
             }

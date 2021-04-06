@@ -14,7 +14,6 @@ class EmailService {
         oauth2Client.setCredentials({refresh_token: OAUTH_REFRESH_TOKEN});
         const accessToken = await new Promise((resolve, reject) => {
             oauth2Client.getAccessToken((err, token) => {
-                console.log({err, token});
                 if (err) {
                     reject();
                 }
@@ -46,7 +45,6 @@ class EmailService {
 
         return transporter.sendMail(mailOptions, error =>{
             if (error){
-                console.log(error);
                 return {success: false, error: error.message};
             } else {
                 return {success: true};

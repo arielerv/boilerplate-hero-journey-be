@@ -10,6 +10,7 @@ const packageJson = require('../package.json');
 const {OpenApiValidator} = require('express-openapi-validator');
 const Mongoose = require('./helpers/mongoose');
 const {BODY_LIMIT, NODE_ENV, PORT} = process.env;
+const sixtyDaysInSeconds = 15768000;
 
 class App {
     constructor() {
@@ -62,17 +63,15 @@ class App {
                 credentials: true,
                 origin: /^http:\/\/localhost/
             }));
-        }
-        if(NODE_ENV === 'production') {
+        } else if(NODE_ENV !== 'test') {
             express.disable('x-powered-by');
             express.use(
                 helmet({
                     referrerPolicy: { policy: 'no-referrer' },
-                    contentSecurityPolicy: false
+                    contentSecurityPolicy: false,
+                    hsts: {maxAge: sixtyDaysInSeconds}
                 })
             );
-            const sixtyDaysInSeconds = 15768000;
-            express.use(helmet.hsts({maxAge: sixtyDaysInSeconds}));
             express.use(cors());
         }
     }
