@@ -1,11 +1,10 @@
 **/.*/
 node_modules/
 dist/
+build/
 coverage
 *.log
 .history
 .vscode
 .env*
-.env-prod
-.env-uat
 package-lock.json

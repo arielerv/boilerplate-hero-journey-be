@@ -62,24 +62,15 @@ class App {
                 credentials: true,
                 origin: /^http:\/\/localhost/
             }));
-        } else if(NODE_ENV !== 'test') {
+        }
+        if(NODE_ENV === 'production') {
             express.disable('x-powered-by');
-            express.use(helmet());
-            express.use(helmet.noSniff());
-            express.use(helmet.referrerPolicy({ policy: 'same-origin' }));
-            express.use(helmet.featurePolicy({
-                features: {
-                    fullscreen: ['\'self\''],
-                    vibrate: ['\'none\''],
-                    syncXhr: ['\'none\'']
-                }
-            }));
-            express.use(helmet.contentSecurityPolicy({
-                directives: {
-                    defaultSrc: ['\'self\''],
-                    styleSrc: ['\'self\'', 'maxcdn.bootstrapcdn.com']
-                }
-            }));
+            express.use(
+                helmet({
+                    referrerPolicy: { policy: 'no-referrer' },
+                    contentSecurityPolicy: false
+                })
+            );
             const sixtyDaysInSeconds = 15768000;
             express.use(helmet.hsts({maxAge: sixtyDaysInSeconds}));
             express.use(cors());

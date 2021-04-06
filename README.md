@@ -6,7 +6,6 @@ The project is a boilerplate for node JS and use mongo with the driver mongoose 
 ## Environment Variables
 ```
 NODE_ENV=development
-MORGAN_FORMAT=dev
 SERVE_STATIC=public
 PORT=5051
 
