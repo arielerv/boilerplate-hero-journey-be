@@ -19,7 +19,7 @@ const clean = () => require('del')('dist');
 
 const copy = () => src(['./src/**', './public/**', 'index.js'], {base: '.'}).pipe(dest('dist'));
 
-const copyEnv = () => () => src(['.env'], {base: '.', allowEmpty: true})
+const copyEnv = () => () => src('.env', {base: '.', allowEmpty: true})
     .pipe(rename('.env'))
     .pipe(dest('dist/'));
 
@@ -35,6 +35,4 @@ const dist = parallel(copy, distPackage);
 
 exports.eslint = eslint;
 exports.dev = server;
-exports['build-dev'] = series(clean, dist, copyEnv());
-exports['build-uat'] = series(clean, dist, copyEnv('uat'));
 exports.build = series(clean, dist, copyEnv('prod'));
