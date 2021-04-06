@@ -1,3 +1,4 @@
+require('dotenv').config();
 const { PAGE_SIZE } = process.env;
 const toNumber = require('lodash/toNumber');
 

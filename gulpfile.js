@@ -1,3 +1,4 @@
+require('dotenv').config();
 const {dest, parallel, series, src} = require('gulp');
 const $ = require('gulp-load-plugins')();
 const rename = require('gulp-rename');

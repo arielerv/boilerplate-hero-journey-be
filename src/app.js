@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -11,7 +12,6 @@ const {OpenApiValidator} = require('express-openapi-validator');
 const Mongoose = require('./helpers/mongoose');
 const {BODY_LIMIT, NODE_ENV, PORT} = process.env;
 const sixtyDaysInSeconds = 15768000;
-require('dotenv').config();
 
 class App {
     constructor() {

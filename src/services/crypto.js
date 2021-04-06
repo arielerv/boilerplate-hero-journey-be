@@ -1,3 +1,4 @@
+require('dotenv').config();
 const crypto = require('crypto');
 const {CRYPT_KEY} = process.env;
 

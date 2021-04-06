@@ -1,6 +1,5 @@
-const dotenv = require('dotenv');
+require('dotenv').config();
 const packageJson = require('../../package.json');
-dotenv.config();
 
 class Locals {
     static config() {

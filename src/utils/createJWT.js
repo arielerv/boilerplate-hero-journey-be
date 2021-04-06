@@ -1,3 +1,4 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const {AUTH_CLIENT_SECRET} = process.env;
 

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const omit = require('lodash/omit');
 const {AuthService, UserService, EmailService, TokenService} = require('../services');
 const {CryptoService} = require('../services');
