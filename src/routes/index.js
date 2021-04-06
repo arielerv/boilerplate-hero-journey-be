@@ -2,7 +2,6 @@ const {Router} = require('express');
 const get = require('lodash/get');
 const { /*authenticate,*/ errorHandler} = require('./middlewares');
 const {StatusController} = require('../controllers');
-const Logger = require('../helpers/logger');
 
 /**
  * @class Routes
